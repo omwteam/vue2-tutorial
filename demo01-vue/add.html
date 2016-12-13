@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+    <title>选择用户</title>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <style>
+        a {
+            text-decoration: none;
+        }
+        .white {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <nav class="navbar navbar-default  text-center"><h3>添加用户</h3></nav>
+    <div class="container text-center" style="margin-top: 100px;">
+        {{type}}
+        <div class="form-group"  v-show="type">
+            <input type="text" class="form-control input-lg" placeholder="请输入用户名" v-model="username" maxlength="30" value="">
+
+        </div>
+        <div class="form-group" v-show="!type">
+            <input type="text" class="form-control input-lg" placeholder="请输入任务名称" v-model="title" maxlength="30" value="">
+            {{title}}
+        </div>
+        <div class="form-group" v-show="!type">
+            <textarea name="" id="" cols="30" rows="10" class="form-control" v-model="detail" placeholder="请输入详细内容"></textarea>
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-primary btn-lg btn-block"  @click="addUser()">添加</button>
+        </div>
+        <div class="alert alert-success" role="alert" v-show="success">添加成功</div>
+        <div class="alert alert-danger" role="alert" v-show="fail">添加失败</div>
+
+    </div>
+</div>
+<script src="vue2/vue.min.js"></script>
+<script src="vue2/vue-resource.min.js"></script>
+<script>
+    var getUrlParam = function (name) {
+        console.time('selfSearch');
+        var list = location.search.slice(1).split("&");
+
+        var i = 0,
+            l = list.length;
+        if (name) {
+            for (i; i < l; i++) {
+                var sign1 = list[i].indexOf('=');
+                if (list[i].slice(0, sign1) === name) {
+                    console.timeEnd('selfSearch');
+                    return decodeURIComponent(list[i].slice(sign1 + 1));
+                }
+            }
+        } else {
+            var obj = {};
+            for (i; i < l; i++) {
+                var sign2 = list[i].indexOf('=');
+                obj[list[i].slice(0, sign2)] = decodeURIComponent(list[i].slice(sign2 + 1));
+            }
+            console.timeEnd('selfSearch');
+            return obj;
+        }
+    };
+    Vue.http.options.emulateJSON = true;
+    new Vue({
+        el: '#app',
+        data: {
+            type: false,
+            addUrl: 'http://www.api.com/todo/add',
+            username: '',
+            title: '',
+            detail: '',
+            success: false,
+            fail: false
+        },
+        created: function () {
+            var that = this;
+            that.type = getUrlParam('type') == 'user';
+            that.addUrl = this.type ? 'http://www.api.com/todouser/add' : 'http://www.api.com/todo/add';
+
+        },
+        methods: {
+            addUser: function() {
+                var that = this;
+                var userId = localStorage.getItem('userid');
+                if (that.type) {
+                    that.$http.post(that.addUrl,{name:that.username}).then(function(response){
+                        console.log(response.data);
+                        if (response.data.code == 200) {
+                            that.success = true;
+                            that.fail = false;
+                            setTimeout(function(){
+                                window.location.href = 'userlist.html';
+                            },1500);
+                        }
+                    }).catch(function(response) {
+                        that.success = false;
+                        that.fail = true;
+                        console.log(response)
+                    })
+                } else {
+                    that.$http.post(that.addUrl,{ title: that.title,detail: that.detail,u_id:userId }).then(function(response){
+                        console.log(response.data);
+                        if (response.data.code == 200) {
+                            that.success = true;
+                            that.fail = false;
+                            setTimeout(function(){
+                                window.location.href = 'index.html';
+                            },1500);
+                        }
+                    }).catch(function(response) {
+                        that.success = false;
+                        that.fail = true;
+                        console.log(response)
+                    })
+                }
+
+            }
+        }
+    });
+</script>
+</body>
+</html>

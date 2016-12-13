@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+    <title>选择用户</title>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+</head>
+<body>
+<div id="app">
+    <nav class="navbar navbar-default  text-center"><h3>选择用户</h3></nav>
+    <!--<div class="container">-->
+        <a class="btn btn-info btn-block btn-lg" href="add.html?type=user" >去添加用户</a>
+        <table v-if="!seen" class="table table-responsive table-hover" style="margin-top: 30px;">
+            <tr v-for="item in list" @click="chooseUser(item.id,item.name )">
+                <td>{{ item.name }}</td>
+            </tr>
+        </table>
+    <!--</div>-->
+</div>
+<script src="vue2/vue.min.js"></script>
+<script src="vue2/vue-resource.min.js"></script>
+<script>
+
+    new Vue({
+        el: '#app',
+        data: {
+            listUrl: 'http://www.api.com/todouser/index',
+            list: [],
+            seen: false,
+            status: 1
+        },
+        created: function () {
+            var that = this;
+            that.getList();
+        },
+        methods: {
+            getList: function() {
+                var that = this;
+                that.$http.get(that.listUrl).then(function(response){
+                    console.log(response.data);
+                    this.seen = !(response.data.result.length > 0);
+                    this.list = response.data.result;
+                }).catch(function(response) {
+                    console.log(response)
+                })
+            },
+            chooseUser: function (id,username) {
+                localStorage.setItem('userid',id);
+                localStorage.setItem('username',username);
+                window.location.href = 'index.html?id='+id;
+            }
+        }
+    });
+</script>
+<script src="js/login.js"></script>
+</body>
+</html>

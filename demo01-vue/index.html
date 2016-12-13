@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- 为移动设备添加 viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta content="telephone=no" name="format-detection">
+    <!-- 关闭电话号码识别： -->
+    <meta content="telephone=no" name="format-detection">
+    <!-- 邮箱识别： -->
+    <meta content="email=no" name="format-detection">
+    <!-- 指定 iOS 的 safari 顶端状态条的样式 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>待办事项</title>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <style>
+        .menu {
+            width: 120px;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            background-color: seashell;
+        }
+        .menu-select > li {
+            list-style: none;
+            margin-left: -35px;
+            padding: 0;
+            background-color: #2a6496;
+        }
+        .menu-select > li:hover {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <!--<drop-menu></drop-menu>-->
+    <!--导航栏-->
+    <nav class="navbar navbar-default  text-center">
+        <h3>待办事项</h3>
+        <!--<select name="" id="switch" class="form-control" style="position:absolute;top:13px;right:10px;width: 100px;">-->
+            <!--<option value="1" ><a href="userlist.html">{{user}}</a></option>-->
+            <!--<option value="2">获取方式</option>-->
+        <!--</select>-->
+        <drop-menu style="position:absolute;top:13px;right:10px;width: 100px;"></drop-menu>
+    </nav>
+    <!--主要内容-->
+    <div class="">
+
+        <!--列表-->
+        <article class="list container" id="list" v-show="!editFlag">
+            <div class="row ">
+                <div class="col-md-3 col-sm-3 col-xs-3">
+                    <select name="" id="" v-model="status" class="form-control">
+                        <option value="0">废弃</option>
+                        <option value="1">待办</option>
+                        <option value="2">已完成</option>
+                    </select>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    <input type="search" class="form-control" v-model="search"  placeholder="标题或描述中的关键字">
+                </div>
+
+                <div class="col-md-3 col-sm-3 col-xs-3">
+                    <button type="button" class="btn btn-primary btn-sm" @click="goAdd()">添加事项</button>
+                </div>
+            </div>
+            <div class="" style="margin-top: 15px;">
+                <table class="table table-responsive table-condensed" v-show="listFlag">
+                    <thead>
+                    <tr>
+                        <th>完成</th>
+                        <th>序号</th>
+                        <th>名称</th>
+                        <th>创建时间</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in screenData   ">
+                            <td><input type="checkbox" class="checkbox"></td>
+                            <td>{{ item.id }}</td>
+                            <td>{{ item.title }}</td>
+                            <td>{{ item.time }}</td>
+                            <td><button type="button" class="btn btn-info btn-sm" @click="goEdit(item.id)">编辑</button><button type="button" class="btn btn-danger btn-sm" @click="del(item.id)">删除</button></td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+        </article>
+
+        <!--编辑详情-->
+        <article class="container" id="edit" v-show="editFlag">
+            <div class="form-group" >
+                <input type="text" class="form-control input-lg" placeholder="请输入任务名称" v-model="title" maxlength="10" value="">
+            </div>
+            <div class="form-group">
+                <textarea name=""  cols="30" rows="10" class="form-control" v-model="detail" placeholder="请输入详细内容"></textarea>
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-primary btn-lg btn-block"  @click="update()">更新</button>
+            </div>
+        </article>
+    </div>
+
+</div>
+<script src="vue2/vue.min.js"></script>
+<script src="vue2/vue-resource.min.js"></script>
+<script src="js/index.js"></script>
+</body>
+</html>
