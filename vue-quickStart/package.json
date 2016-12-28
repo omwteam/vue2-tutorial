@@ -1,5 +1,5 @@
 {
-  "name": "vu-cli",
+  "name": "vue-basic",
   "version": "1.0.0",
   "description": "A Vue.js project",
   "author": "freddy",
@@ -9,8 +9,11 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "mint-ui": "^2.0.5",
-    "vue": "^2.1.0"
+    "axios": "^0.15.3",
+    "vue": "^2.1.0",
+    "vue-awesome-swiper": "^2.2.6",
+    "vue-axios": "^1.2.2",
+    "vue-infinite-loading": "^1.1.4"
   },
   "devDependencies": {
     "autoprefixer": "^6.4.0",
